@@ -1,12 +1,19 @@
 Package: tastyfish
-Type: Package
-Title: Account For Functional Response When Modeling Stomach Contents Data
-Version: 0.1.0
-Author: Matthew D. Robertson
-Maintainer: Matthew D. Robertson <mdrobertson24@gmail.com>
-Description: Using predator stomach contents data to model prey abundance is becoming increasingly common but can be biased if we 
-  don't account for the functional response. This model will do both!
-License: MIT + file LICENSE
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "First",
+           family = "Last",
+           role = c("aut", "cre"),
+           email = "first.last@example.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Imports: 
+    TMB (>= 1.7.16)
+LinkingTo: 
+    TMB
