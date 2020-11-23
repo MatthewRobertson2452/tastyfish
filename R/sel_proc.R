@@ -2,15 +2,16 @@
 
 #' Model selection procedure for real data
 #'
-#' @param tmb_data tmb data object from the model_data() function
-#' @param param_list parameter list object from the model_param() function
-#' @param k_seq seq of all possible k values to be cycled through in the model selection procedure, default is seq(from=0.1,to=1,by=0.05)
-#' @param chi_seq seq of all possible chi values to be cycled through in the model selection procedure, default is seq(from=0.1,to=1,by=0.05)
+#' @param tmb_data TMB data object from the model_data() function
+#' @param param_list Parameter list object from the model_param() function
+#' @param k_seq Sequence of all possible k values to be cycled through in the model selection procedure, default is seq(from=0.1,to=1,by=0.05)
+#' @param chi_seq Sequence of all possible chi values to be cycled through in the model selection procedure, default is seq(from=0.1,to=1,by=0.05)
 #'
-#' @return
-#' @export
+#' @return A list for outputs from the selected model including, its AIC, as well as the k, chi, and beta parameter estimates
+#' @export 
 #'
-#' @examples
+#' @examples 
+#' best_model<-sel_proc(tmb_data=tmb_data, param_list=param_list, k_seq=seq(from=0.1,to=1,by=0.05), chi_seq=seq(from=0.05,to=1,by=0.05))
 sel_proc<-function(tmb_data, param_list,
                    k_seq=seq(from=0.1,to=1,by=0.05), chi_seq=seq(from=0.05,to=1,by=0.05)){
 
@@ -20,33 +21,6 @@ type2_given_aic<-matrix(NA, ncol=length(chi_seq), nrow=length(k_seq))
 
 for(i in 1:length(k_seq)){
   for(j in 1:length(chi_seq)){
-    
-    #tmb.data<-list(
-    #  n=tmb_data$n,
-    #  nyrs=tmb_data$nyrs,
-    #  ndex=tmb_data$ndex,
-    #  iyear=tmb_data$iyear,
-    #  idex=tmb_data$idex,
-     # pa=tmb_data$pa)
-    
-    #parameters<-list(
-    #  yr_tau = param_list$yr_tau_mat,
-    #  iye = param_list$iye,
-    #  log_sd_resid = 0.2
-    #)
-    
-    ###RUNNING A TYPE 1 MODEL
-    #obj<- TMB::MakeADFun(data = c(model = "type1_model", # which model to use
-    #                              tmb.data),
-    #                     parameters = parameters,
-    #                     DLL = "tastyfish_TMBExports", 
-    #                     random=c("yr_tau","iye")) # package's DLL
-    
-    #opt<-nlminb(obj$par,obj$fn,obj$gr,control = list(trace=10,eval.max=2000,iter.max=1000),silent=TRUE)
-    
-    #t1_rep = obj$report()
-    
-    #t1_aic<-2*opt$objective+ 2*length(opt$par)#aic
     
     tmb_data$k<-k_seq[i]
     tmb_data$chi<-chi_seq[j]
@@ -71,15 +45,11 @@ for(i in 1:length(k_seq)){
     }else{
       
       opt<-nlminb(obj$par,obj$fn,obj$gr,control = list(trace=10,eval.max=2000,iter.max=1000),silent=TRUE)
-      #t2rep = obj$report()
       
       grad_list[i,j]<-max(obj$gr())
       
       type2_given_aic[i,j]<-2*opt$objective+ 2*length(opt$par)#aic
-      
-      #obj$gr()
-      
-      #t2aic<-2*opt$objective+ 2*length(opt$par)#aic
+
     }
   }
 }
@@ -120,10 +90,9 @@ opt<-nlminb(obj$par,obj$fn,obj$gr,control = list(trace=10,eval.max=2000,iter.max
 rep<-obj$report()
 
 output_list<-list(
-  #t1_aic = t1_aic,
   aic = 2*opt$objective+ 2*length(opt$par),
-  sel_k = sel_k,
-  sel_chi = sel_chi,
+  k = sel_k,
+  chi = sel_chi,
   beta = rep$beta
 )
 

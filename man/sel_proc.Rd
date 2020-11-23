@@ -12,17 +12,20 @@ sel_proc(
 )
 }
 \arguments{
-\item{tmb_data}{tmb data object from the model_data() function}
+\item{tmb_data}{TMB data object from the model_data() function}
 
-\item{param_list}{parameter list object from the model_param() function}
+\item{param_list}{Parameter list object from the model_param() function}
 
-\item{k_seq}{seq of all possible k values to be cycled through in the model selection procedure, default is seq(from=0.1,to=1,by=0.05)}
+\item{k_seq}{Sequence of all possible k values to be cycled through in the model selection procedure, default is seq(from=0.1,to=1,by=0.05)}
 
-\item{chi_seq}{seq of all possible chi values to be cycled through in the model selection procedure, default is seq(from=0.1,to=1,by=0.05)}
+\item{chi_seq}{Sequence of all possible chi values to be cycled through in the model selection procedure, default is seq(from=0.1,to=1,by=0.05)}
 }
 \value{
-
+A list for outputs from the selected model including, its AIC, as well as the k, chi, and beta parameter estimates
 }
 \description{
 Model selection procedure for real data
+}
+\examples{
+best_model<-sel_proc(tmb_data=tmb_data, param_list=param_list, k_seq=seq(from=0.1,to=1,by=0.05), chi_seq=seq(from=0.05,to=1,by=0.05))
 }

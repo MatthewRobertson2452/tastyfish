@@ -2,24 +2,29 @@
 % Please edit documentation in R/model_data.R
 \name{model_data}
 \alias{model_data}
-\title{Create data list for TMB}
+\title{Create data list for general functional response model}
 \usage{
 model_data(fishy_dat, k, chi, id, n)
 }
 \arguments{
-\item{fishy_dat}{}
+\item{fishy_dat}{Object output from the make_data() function}
 
-\item{k}{}
+\item{k}{The K parameter value for the general functional response model. Represents the upper asymptote of the curve.}
 
-\item{chi}{}
+\item{chi}{The chi parameter value for the general functional response model. Represents the midpoint of the curve.}
 
-\item{id}{}
+\item{id}{An ID vector the length of the number of datasets used to represent different functional responses}
 
-\item{n}{}
+\item{n}{A vector the length of the number of datasets used where each number indicates the number of observations for that dataset}
 }
 \value{
-
+A list of data to be used when generating the TMB model. The list includes the total number of observations (n), the number of years (nyrs),
+the number of datasets (ndex), an index vector for the year of each observation (iyear), an index vector for the dataset associated with each observation (idex),
+the k paramater, the chi parameter, a vector for all presence/absence data (pa), and an index vector identifying which functional response data will be associated with (t2dex)
 }
 \description{
-Create data list for TMB
+Create data list for general functional response model
+}
+\examples{
+model_data(fishy_dat=fishy_dat, k=0.95, chi=0.45, id=c(0,1,1), n=c(length(df$pa),length(df1$pa),length(df2$pa)))
 }

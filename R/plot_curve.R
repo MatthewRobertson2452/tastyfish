@@ -2,13 +2,13 @@
 
 #' Plot the functional response curve and associated data
 #'
-#' @param rep the report object from the TMB model
-#' @param tmb_data the datalist used for the TMB model
+#' @param rep The report object from the TMB model
+#' @param tmb_data The datalist used for the TMB model
 #'
-#' @return
+#' @return plot
 #' @export
 #'
-#' @examples
+#' @examples plot_curve(rep=rep, tmb_data=tmb_data)
 plot_curve<-function(rep, tmb_data){
   new_x<-seq(from=0, to=1, by=0.01)
   K<-tmb_data$k
