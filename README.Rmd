@@ -1,7 +1,7 @@
 ---
 title: 'tastyfish: a package to develop an index of prey abundance from stomach contents
   data while accounting for predator functional response'
-author: "Matt Robertson"
+author: "Matthew Robertson"
 date: "23/11/2020"
 output: github_document
 ---
