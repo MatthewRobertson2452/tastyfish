@@ -4,7 +4,7 @@
 #undef TMB_OBJECTIVE_PTR
 #define TMB_OBJECTIVE_PTR obj
 
-// name of function below **MUST** match filename
+// name of function below **probST** match filename
 template <class Type>
   Type type1_model(objective_function<Type>* obj) {
 
@@ -14,7 +14,7 @@ template <class Type>
     Type one = 1.0;
     Type two = 2.0;
     
-    //input data
+    //READ IN THE INPUT DATA
     DATA_INTEGER(n);
     DATA_INTEGER(nyrs);
     DATA_INTEGER(ndex);
@@ -22,43 +22,43 @@ template <class Type>
     DATA_IVECTOR(idex);
     DATA_VECTOR(pa);
     
-    PARAMETER_VECTOR(iye);
-    PARAMETER(lk);
+    //READ THE PARAMETERS
+    PARAMETER_VECTOR(ny);
+    PARAMETER(lk); //PLACEHOLDER PARAMETER BECAUSE CAN'T ONLY HAVE RANDOM EFFECTS
     
-    vector<Type> mu(nyrs);
-    matrix<Type> new_mu(nyrs,ndex);
+    //TRANSFORM PARAMETERS AND CREATE DERIVED PARAMETERS
+    vector<Type> prob(nyrs);
+    matrix<Type> new_prob(nyrs,ndex);
     
-    //Observation Model
     int id, iy;
     for(int i = 0;i < n;++i){
       iy = iyear(i);
       id = idex(i);
       
-      mu(iy) = exp(iye(iy))/(1+exp(iye(iy)));
+      prob(iy) = exp(ny(iy))/(1+exp(ny(iy))); //LOGIT TRANSFORM THE ABUNDANCE INDEX
       
-      if(id==0){new_mu(iy,0)=mu(iy);}
-      if(id>0){new_mu(iy,id)=mu(iy);}
+      new_prob(iy,id)=prob(iy); // ALL UNBIASED DATA
+      
       
       if(isNA(pa(i))==false){
-        if(id==0){nll -= dbinom(pa(i), one, new_mu(iy,0), true);}
-        if(id>0){nll -= dbinom(pa(i), one, new_mu(iy,id), true);}
+        nll -= dbinom(pa(i), one, new_prob(iy,id), true); //BERNOULLI LIKELIHOOD FOR PRESENCE/ABSENCE DATA
       }
       
     }
     
-    //RW on these likelihoods results in better estimates
-    vector<Type> del_iye=iye;
-    nll -= dnorm(del_iye(0),Type(10.0),one, true);
+    //GAUSSIAN RW FOR THE ABUNDANCE INDEX
+    vector<Type> del_ny=ny;
+    nll -= dnorm(del_ny(0),Type(10.0),one, true);
     for(int i = 1;i < nyrs;++i){
-      nll -= dnorm(del_iye(i),del_iye(i-1),one, true);
+      nll -= dnorm(del_ny(i),del_ny(i-1),one, true);
     }
     
     
-    REPORT(mu);
-    REPORT(iye);
-    REPORT(new_mu);
+    REPORT(prob);
+    REPORT(ny);
+    REPORT(new_prob);
     
-    ADREPORT(iye);
+    ADREPORT(ny);
   
   return nll;
   }

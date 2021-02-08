@@ -9,7 +9,7 @@ bool isNA(Type x){
   return R_IsNA(asDouble(x));
 }
 
-// name of function below **MUST** match filename
+// name of function below **probST** match filename
 // (here it's three_spp_model)
 template <class Type>
 Type matrix_model_new(objective_function<Type>* obj) {
@@ -20,59 +20,59 @@ Type matrix_model_new(objective_function<Type>* obj) {
   Type one = 1.0;
   Type two = 2.0;
   
-  //input data
+  //READ IN THE INPUT DATA
   DATA_INTEGER(n);
   DATA_INTEGER(nyrs);
   DATA_INTEGER(ndex);
   DATA_IVECTOR(iyear);
   DATA_IVECTOR(idex);
+  DATA_IVECTOR(ifxn);
   DATA_SCALAR(k);
   DATA_VECTOR(pa);
   
-  PARAMETER_VECTOR(iye);
+  //READ THE PARAMETERS
+  PARAMETER_VECTOR(ny);
   PARAMETER_VECTOR(lbeta);
   PARAMETER_VECTOR(lchi);
   
+  //TRANSFORM PARAMETERS AND CREATE DERIVED PARAMETERS
   vector<Type> beta=exp(lbeta);
   vector<Type> chi=exp(lchi);
-  vector<Type> mu(nyrs);
-  matrix<Type> new_mu(nyrs,ndex);
+  vector<Type> prob(nyrs);
+  matrix<Type> new_prob(nyrs,ndex);
   
-  //Observation Model
-  int id, iy;
+  int id, iy, iw;
   for(int i = 0;i < n;++i){
     iy = iyear(i);
     id = idex(i);
+    iw = ifxn(i);
     
-    mu(iy) = exp(iye(iy))/(1+exp(iye(iy)));
+    prob(iy) = exp(ny(iy))/(1+exp(ny(iy))); //LOGIT TRANSFORM THE ABUNDANCE INDEX
     
-    if(id==0){new_mu(iy,0)=mu(iy);}
-    if(id>0 & id<3){new_mu(iy,id)=(k*pow(mu(iy),beta(0)))/(pow(chi(0),beta(0))+pow(mu(iy),beta(0)));}
-    if(id>2 & id<5){new_mu(iy,id)=(k*pow(mu(iy),beta(1)))/(pow(chi(1),beta(1))+pow(mu(iy),beta(1)));}
-    //if(id>4 ){new_mu(iy,id)=(k*pow(mu(iy),beta(2)))/(pow(chi(2),beta(2))+pow(mu(iy),beta(2)));}
+    if(id==0){new_prob(iy,0)=prob(iy);} //TRAWL PROBABILITY UNBIASED
+    if(id>0){new_prob(iy,id)=(k*pow(prob(iy),beta(iw)))/(pow(chi(iw),beta(iw))+pow(prob(iy),beta(iw)));} //FUNCTIONAL RESPONSE FOR EACH STOMACH CONTENT DATA SET
     
     if(isNA(pa(i))==false){
-      if(id==0){nll -= dbinom(pa(i), one, new_mu(iy,0), true);}
-      if(id>0){nll -= dbinom(pa(i), one, new_mu(iy,id), true);}
+      nll -= dbinom(pa(i), one, new_prob(iy,id), true); //BERNOULLI LIKELIHOOD FOR PRESENCE/ABSENCE DATA
     }
     
   }
   
-  //RW on these likelihoods results in better estimates
-  vector<Type> del_iye=iye;
-  nll -= dnorm(del_iye(0),Type(10.0),one, true);
+  //GAUSSIAN RW FOR THE ABUNDANCE INDEX
+  vector<Type> del_ny=ny;
+  nll -= dnorm(del_ny(0),Type(10.0),one, true);
   for(int i = 1;i < nyrs;++i){
-    nll -= dnorm(del_iye(i),del_iye(i-1),one, true);
+    nll -= dnorm(del_ny(i),del_ny(i-1),one, true);
   }
   
   
-  REPORT(mu);
-  REPORT(iye);
+  REPORT(prob);
+  REPORT(ny);
   REPORT(beta);
   REPORT(chi);
-  REPORT(new_mu);
+  REPORT(new_prob);
   
-  ADREPORT(iye);
+  ADREPORT(ny);
   
   return nll;
 }

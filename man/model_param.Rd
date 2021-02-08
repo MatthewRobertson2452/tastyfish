@@ -4,7 +4,7 @@
 \alias{model_param}
 \title{Create parameter list for for general functional response model}
 \usage{
-model_param(tmb_data, lbeta)
+model_param(tmb_data, lbeta, lchi)
 }
 \arguments{
 \item{tmb_data}{TMB data object from the model_data() function}
@@ -12,12 +12,12 @@ model_param(tmb_data, lbeta)
 \item{lbeta}{A logged starting value for the beta paramater}
 }
 \value{
-A list of parameters for the functional response model, including a matrix with dimensions by number of years and datatypes(yr_tau_mat),
-a vector the length of the number of years (iye), and a starting value for the beta parameter
+A list of parameters for the functional response model, including a vector the length of the number of years (iye),
+and a starting value for the beta and chi parameter's
 }
 \description{
 Create parameter list for for general functional response model
 }
 \examples{
-model_param(tmb_data=tmb_data, lbeta=log(5))
+model_param(tmb_data=tmb_data, lbeta=log(2), lchi=log(0.5))
 }

@@ -1,7 +1,7 @@
 tastyfish: a package to develop an index of prey abundance from stomach
 contents data while accounting for predator functional response
 ================
-Matt Robertson
+Matthew Robertson
 23/11/2020
 
 # Overview
@@ -64,31 +64,21 @@ with some starting values to create the tmb data and parameter lists
 using `model_data` and `model_param`.
 
 ``` r
-tmb_data<-model_data(fishy_dat=fishy_dat, k=0.5, chi=0.1, id=id, n=n)
+tmb_data<-model_data(fishy_dat=fishy_dat, id=id, n=n)
 
-param_list<- model_param(tmb_data, lbeta=log(5))
+param_list<- model_param(tmb_data, lbeta=log(2), lchi=log(0.5))
 ```
 
-We can now input these lists into `sel_proc` to run the model selection
-procedure that is described in the paper.
+We can then run the TMB model to calculate the prey index of abundance
+while also estimating and accouting for the functional response of the
+predator by using the following code:
 
 ``` r
-best_model<-sel_proc(tmb_data, param_list)
-```
-
-This will provide us with information about the best model that we can
-run as its own model after updating the data list by inputting the k and
-chi values from the model selection procedure. We can then run the TMB
-model by using the following code:
-
-``` r
-tmb_data<-model_data(fishy_dat=fishy_dat, k=best_model$k, chi=best_model$chi, id=id, n=n)
-
 obj<- TMB::MakeADFun(data = c(model = "matrix_model_new", # which model to use
                                 tmb_data),
                        parameters = param_list,
                        DLL = "tastyfish_TMBExports", 
-                       random=c("yr_tau_mat","iye")) # package's DLL
+                       random=c("ny")) # package's DLL
 
 opt<-nlminb(obj$par,obj$fn,obj$gr,control = list(trace=10,eval.max=2000,iter.max=1000),silent=TRUE)
 
@@ -106,16 +96,16 @@ plot_curve(rep, tmb_data)
 
 ![Estimated functional response for American plaice. Full stomach
 contents shown as open circles and called stomach contents shown as
-closed circles.](README_files/figure-gfm/unnamed-chunk-9-1.png)
+closed circles.](README_files/figure-gfm/unnamed-chunk-8-1.png)
 
 And time-series:
 
 ``` r
-plot_ts(rep, sdrep, unique(trawl$year), dat_names=c("Trawl","Call","Full"), ylim=c(0.3,0.6))
+plot_ts(tmb_data, rep, sdrep, unique(spring_camp_surv$year), dat_names=c("Trawl","Called","Full"))
 ```
 
 ![Estimated sand lance index of abundance from models with American
 plaice stomach contents data. The shaded grey area represents the
 standard error around the estimated trend. Dashed lines represent the
 estimated trends from each data
-source.](README_files/figure-gfm/unnamed-chunk-10-1.png)
+source.](README_files/figure-gfm/unnamed-chunk-9-1.png)
