@@ -1,4 +1,5 @@
-tastyfish: a package to account for a non-linear functional response when estimating prey dynamics using predator diet data
+tastyfish: a package to account for a non-linear functional response
+when estimating prey dynamics using predator diet data
 ================
 Matthew Robertson
 23/11/2020
@@ -13,6 +14,19 @@ package and run:
 
 ``` r
 devtools::install_github(MatthewRobertson2452\tastyfish)
+library(tastyfish)
+```
+
+If you are having problems with installation, you can install the
+package locally as a ZIP file by clicking the Code menu and “download
+ZIP” from the [github
+page](https://github.com/MatthewRobertson2452/tastyfish). You can then
+extract the folder in a local directory while recording the directory
+name (which I will reference as download\_dir). To install, then use
+
+``` r
+devtools::install_local(path=download_dir, dependencies=FALSE)
+library(tastyfish)
 ```
 
 # Example
@@ -58,14 +72,24 @@ dataframes input in `make_data()`.
 id=c(0,1,1)
 ```
 
-Now that we have that pre-processing done, we can input that information
-with some starting values to create the tmb data and parameter lists
-using `model_data` and `model_param`.
+If we wanted the different types of stomach contents data to estimate
+separate functional response shapes we would use:
 
 ``` r
-tmb_data<-model_data(fishy_dat=fishy_dat, id=id, n=n)
+id=c(0,1,2)
+```
 
-param_list<- model_param(tmb_data, lbeta=log(2), lchi=log(0.5))
+Now that we have that pre-processing done, we can input that information
+with some starting values to create the tmb data and parameter lists
+using `model_data` and `model_param`. If you are estimating multiple
+functional response forms (e.g. from multiple predators), lbeta and lchi
+can be treated as vectors where the order of starting values will match
+the order that the data was input as.
+
+``` r
+tmb_data<-model_data(fishy_dat=fishy_dat, id=id, n=n, type="nonlinear")
+
+param_list<- model_param(tmb_data, lbeta=log(2), lchi=log(0.5), type="nonlinear")
 ```
 
 We can then run the TMB model to calculate the prey index of abundance
@@ -73,7 +97,7 @@ while also estimating and accouting for the functional response of the
 predator by using the following code:
 
 ``` r
-obj<- TMB::MakeADFun(data = c(model = "matrix_model_new", # which model to use
+obj<- TMB::MakeADFun(data = c(model = "NLFPM", # which model to use
                                 tmb_data),
                        parameters = param_list,
                        DLL = "tastyfish_TMBExports", 
@@ -95,16 +119,56 @@ plot_curve(rep, tmb_data)
 
 ![Estimated functional response for American plaice. Full stomach
 contents shown as open circles and called stomach contents shown as
-closed circles.](README_files/figure-gfm/unnamed-chunk-8-1.png)
+closed circles.](README_files/figure-gfm/unnamed-chunk-10-1.png)
 
 And time-series:
 
 ``` r
-plot_ts(tmb_data, rep, sdrep, unique(spring_camp_surv$year), dat_names=c("Trawl","Called","Full"))
+plot_ts(tmb_data, rep, sdrep, year=unique(spring_camp_surv$year), dat_names=c("Trawl","Called","Full"), type="nonlinear")
 ```
 
 ![Estimated sand lance index of abundance from models with American
 plaice stomach contents data. The shaded grey area represents the
 standard error around the estimated trend. Dashed lines represent the
 estimated trends from each data
-source.](README_files/figure-gfm/unnamed-chunk-9-1.png)
+source.](README_files/figure-gfm/unnamed-chunk-11-1.png)
+
+We can compare these results to what we would obtain if assuming a
+linear functional response by running the LFPM. We simply remove the
+nonlinear functional response shape parameters from the `param_list`
+function and change the type to “linear”:
+
+``` r
+tmb_data<-model_data(fishy_dat=fishy_dat, id=id, n=n, type="linear")
+
+param_list<- model_param(tmb_data, type="linear")
+```
+
+We then change the TMB model to “LFPM”
+
+``` r
+obj<- TMB::MakeADFun(data = c(model = "LFPM", # which model to use
+                                tmb_data),
+                       parameters = param_list,
+                       DLL = "tastyfish_TMBExports", 
+                       random=c("ny")) # package's DLL
+
+opt<-nlminb(obj$par,obj$fn,obj$gr,control = list(trace=10,eval.max=2000,iter.max=1000),silent=TRUE)
+
+
+rep<-obj$report()
+sdrep<-TMB::sdreport(obj)
+```
+
+Finally, we can plot our output be specifying that we used a linear
+functional response model in `plot_ts` function.
+
+``` r
+plot_ts(tmb_data, rep, sdrep, year=unique(spring_camp_surv$year), dat_names=c("Trawl","Called","Full"), type="linear")
+```
+
+![Estimated sand lance index of abundance from models with American
+plaice stomach contents data. The shaded grey area represents the
+standard error around the estimated trend. Dashed lines represent the
+estimated trends from each data
+source.](README_files/figure-gfm/unnamed-chunk-14-1.png)
