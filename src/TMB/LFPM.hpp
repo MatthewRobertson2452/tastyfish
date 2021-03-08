@@ -1,12 +1,18 @@
 
 // **DON'T** #include <TMB.hpp> as it is not include-guarded
+//#include <LFPM.hpp> 
 
 #undef TMB_OBJECTIVE_PTR
 #define TMB_OBJECTIVE_PTR obj
 
+template<class Type> //only list this in whichever cpp file is alphabetically first since thats the first cpp file read in and the others aren't include guarded meaning it will tell you that it has been re-defined
+bool isNA(Type x){
+  return R_IsNA(asDouble(x));
+}
+
 // name of function below **probST** match filename
 template <class Type>
-  Type type1_model(objective_function<Type>* obj) {
+Type LFPM(objective_function<Type>* obj) {
 
     using namespace density;
     Type nll = 0.0;

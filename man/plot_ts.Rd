@@ -4,7 +4,7 @@
 \alias{plot_ts}
 \title{Plot time series of index and all dataseries}
 \usage{
-plot_ts(rep, sdrep, year, dat_names, ylim = c(0, 1))
+plot_ts(tmb_data, rep, sdrep, year, dat_names, ylim = c(0, 1), type)
 }
 \arguments{
 \item{rep}{The report object from the TMB model}
@@ -16,6 +16,8 @@ plot_ts(rep, sdrep, year, dat_names, ylim = c(0, 1))
 \item{dat_names}{A vector of the names of the different data series used for the legend}
 
 \item{ylim}{A vector for y-limit in the plot (defaults to c(0,1))}
+
+\item{type}{A character identifying whether you are plotting a linear or nonlinear functional response model. Input "linear" for a linear model and "nonlinear" for a nonlinear model}
 }
 \value{
 plot

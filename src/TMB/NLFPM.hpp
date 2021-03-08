@@ -1,18 +1,16 @@
 
 // **DON'T** #include <TMB.hpp> as it is not include-guarded
+//#include <NLFPM.hpp> 
 
 #undef TMB_OBJECTIVE_PTR
 #define TMB_OBJECTIVE_PTR obj
 
-template<class Type>
-bool isNA(Type x){
-  return R_IsNA(asDouble(x));
-}
+
 
 // name of function below **probST** match filename
 // (here it's three_spp_model)
 template <class Type>
-Type matrix_model_new(objective_function<Type>* obj) {
+Type NLFPM(objective_function<Type>* obj) {
 
   using namespace density;
   Type nll = 0.0;

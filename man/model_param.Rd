@@ -4,20 +4,26 @@
 \alias{model_param}
 \title{Create parameter list for for general functional response model}
 \usage{
-model_param(tmb_data, lbeta, lchi)
+model_param(tmb_data, lbeta, lchi, type)
 }
 \arguments{
 \item{tmb_data}{TMB data object from the model_data() function}
 
-\item{lbeta}{A logged starting value for the beta paramater}
+\item{lbeta}{A logged starting value for the beta parameter}
+
+\item{lchi}{A logged starting value for the chi parameter}
+
+\item{type}{A character identifying whether you are creating data for a linear or nonlinear functional response model. Input "linear" for a linear model and "nonlinear" for a nonlinear model}
+
+\item{lk}{A placeholder parameter for the linear model that allows it to run, since otherwise there wouldn't be any fixed effects parameters. Don't change from default}
 }
 \value{
-A list of parameters for the functional response model, including a vector the length of the number of years (iye),
+A list of parameters for the functional response model, including a vector the length of the number of years (ny),
 and a starting value for the beta and chi parameter's
 }
 \description{
 Create parameter list for for general functional response model
 }
 \examples{
-model_param(tmb_data=tmb_data, lbeta=log(2), lchi=log(0.5))
+model_param(tmb_data=tmb_data, lbeta=log(2), lchi=log(0.5), type="nonlinear")
 }

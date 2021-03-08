@@ -4,7 +4,7 @@
 \alias{model_data}
 \title{Create data list for general functional response model}
 \usage{
-model_data(fishy_dat, id, n)
+model_data(fishy_dat, id, n, type)
 }
 \arguments{
 \item{fishy_dat}{Object output from the make_data() function}
@@ -12,16 +12,15 @@ model_data(fishy_dat, id, n)
 \item{id}{An ID vector the length of the number of datasets used to represent different functional responses}
 
 \item{n}{A vector the length of the number of datasets used where each number indicates the number of observations for that dataset}
+
+\item{type}{A character identifying whether you are creating data for a linear or nonlinear functional response model. Input "linear" for a linear model and "nonlinear" for a nonlinear model}
 }
 \value{
 A list of data to be used when generating the TMB model. The list includes the total number of observations (n), the number of years (nyrs),
 the number of datasets (ndex), an index vector for the year of each observation (iyear), an index vector for the dataset associated with each observation (idex),
 an index vector to identify which dataset will be modeled with particular functional response parameters (ifxn),
-the k paramater, a vector for all presence/absence data (pa), and an index vector identifying which functional response data will be associated with (t2dex)
+the k parameter, a vector for all presence/absence data (pa), and an index vector identifying which functional response data will be associated with (t2dex)
 }
 \description{
 Create data list for general functional response model
-}
-\examples{
-model_data(fishy_dat=fishy_dat, k=0.95, chi=0.45, id=c(0,1,1), n=c(length(df$pa),length(df1$pa),length(df2$pa)))
 }
