@@ -1,5 +1,4 @@
-tastyfish: a package to develop an index of prey abundance from stomach
-contents data while accounting for predator functional response
+tastyfish: a package to account for a non-linear functional response when estimating prey dynamics using predator diet data
 ================
 Matthew Robertson
 23/11/2020
