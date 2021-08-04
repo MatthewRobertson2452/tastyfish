@@ -2,9 +2,11 @@ tastyfish: a package to account for a non-linear functional response
 when estimating prey dynamics using predator diet data
 ================
 Matthew Robertson
-23/11/2020
+04/8/2022
 
 # Overview
+
+<img src="C:\Users\mroberts\OneDrive%20-%20Memorial%20University%20of%20Newfoundland\Marine%20Institute\Dissertation%20Plans\Chapter%202\Package\hexsticker_tastyfish.png" style="width:35.0%" />
 
 # Installation
 
@@ -87,7 +89,7 @@ can be treated as vectors where the order of starting values will match
 the order that the data was input as.
 
 ``` r
-tmb_data<-model_data(fishy_dat=fishy_dat, id=id, n=n, type="nonlinear")
+tmb_data<-model_data(fishy_dat=fishy_dat, n=n, type="nonlinear")
 
 param_list<- model_param(tmb_data, lbeta=log(2), lchi=log(0.5), type="nonlinear")
 ```
@@ -101,7 +103,7 @@ obj<- TMB::MakeADFun(data = c(model = "NLFPM", # which model to use
                                 tmb_data),
                        parameters = param_list,
                        DLL = "tastyfish_TMBExports", 
-                       random=c("ny")) # package's DLL
+                       random=c("iye")) # package's DLL
 
 opt<-nlminb(obj$par,obj$fn,obj$gr,control = list(trace=10,eval.max=2000,iter.max=1000),silent=TRUE)
 
@@ -139,7 +141,7 @@ nonlinear functional response shape parameters from the `param_list`
 function and change the type to “linear”:
 
 ``` r
-tmb_data<-model_data(fishy_dat=fishy_dat, id=id, n=n, type="linear")
+tmb_data<-model_data(fishy_dat=fishy_dat, n=n, type="linear")
 
 param_list<- model_param(tmb_data, type="linear")
 ```
@@ -151,7 +153,7 @@ obj<- TMB::MakeADFun(data = c(model = "LFPM", # which model to use
                                 tmb_data),
                        parameters = param_list,
                        DLL = "tastyfish_TMBExports", 
-                       random=c("ny")) # package's DLL
+                       random=c("iye")) # package's DLL
 
 opt<-nlminb(obj$par,obj$fn,obj$gr,control = list(trace=10,eval.max=2000,iter.max=1000),silent=TRUE)
 

@@ -24,53 +24,55 @@ Type NLFPM(objective_function<Type>* obj) {
   DATA_INTEGER(ndex);
   DATA_IVECTOR(iyear);
   DATA_IVECTOR(idex);
-  DATA_IVECTOR(ifxn);
   DATA_SCALAR(k);
   DATA_VECTOR(pa);
   
   //READ THE PARAMETERS
-  PARAMETER_VECTOR(ny);
-  PARAMETER_VECTOR(lbeta);
-  PARAMETER_VECTOR(lchi);
+  PARAMETER_VECTOR(iye);
+  PARAMETER(lbeta);
+  PARAMETER(lchi);
+  PARAMETER(logrw_var);
   
   //TRANSFORM PARAMETERS AND CREATE DERIVED PARAMETERS
-  vector<Type> beta=exp(lbeta);
-  vector<Type> chi=exp(lchi);
-  vector<Type> prob(nyrs);
-  matrix<Type> new_prob(nyrs,ndex);
+  Type rw_var = exp(logrw_var);
+  Type beta=exp(lbeta);
+  Type chi=exp(lchi);
   
-  int id, iy, iw;
+  vector<Type> mu(nyrs);
+  matrix<Type> new_mu(nyrs,ndex);
+  
+  int id, iy;
   for(int i = 0;i < n;++i){
     iy = iyear(i);
     id = idex(i);
-    iw = ifxn(i);
     
-    prob(iy) = exp(ny(iy))/(1+exp(ny(iy))); //LOGIT TRANSFORM THE ABUNDANCE INDEX
+    mu(iy) = one-exp(-iye(iy));  //EXPONENTIAL FOR TRAWL DATA
     
-    if(id==0){new_prob(iy,0)=prob(iy);} //TRAWL PROBABILITY UNBIASED
-    if(id>0){new_prob(iy,id)=(k*pow(prob(iy),beta(iw)))/(pow(chi(iw),beta(iw))+pow(prob(iy),beta(iw)));} //FUNCTIONAL RESPONSE FOR EACH STOMACH CONTENT DATA SET
+    if(id==0){new_mu(iy,0)=mu(iy);} //TRAWL PROBABILITY UNBIASED
+    if(id>0){new_mu(iy,id)=(k*pow(mu(iy),beta))/(pow(chi,beta)+pow(mu(iy),beta));} //FUNCTIONAL RESPONSE FOR EACH STOMACH CONTENT DATA SET
     
     if(isNA(pa(i))==false){
-      nll -= dbinom(pa(i), one, new_prob(iy,id), true); //BERNOULLI LIKELIHOOD FOR PRESENCE/ABSENCE DATA
+      if(id==0){nll -= dbinom(pa(i), one, new_mu(iy,0), true);} //BERNOULLI LIKELIHOOD FOR PRESENCE/ABSENCE DATA
+      if(id>0){nll -= dbinom(pa(i), one, new_mu(iy,id), true);}
     }
     
   }
   
   //GAUSSIAN RW FOR THE ABUNDANCE INDEX
-  vector<Type> del_ny=ny;
-  nll -= dnorm(del_ny(0),Type(10.0),one, true);
+  vector<Type> del_iye=log(iye);
+  nll -= dnorm(del_iye(0),Type(10.0),rw_var, true);
   for(int i = 1;i < nyrs;++i){
-    nll -= dnorm(del_ny(i),del_ny(i-1),one, true);
+    nll -= dnorm(del_iye(i),del_iye(i-1),rw_var, true);
   }
   
   
-  REPORT(prob);
-  REPORT(ny);
+  REPORT(mu);
+  REPORT(iye);
   REPORT(beta);
   REPORT(chi);
-  REPORT(new_prob);
+  REPORT(new_mu);
   
-  ADREPORT(ny);
+  ADREPORT(iye);
   
   return nll;
 }

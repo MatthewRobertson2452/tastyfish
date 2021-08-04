@@ -1,7 +1,7 @@
 ---
 title: 'tastyfish: a package to account for a non-linear functional response when estimating prey dynamics using predator diet data'
 author: "Matthew Robertson"
-date: "23/11/2020"
+date: "04/8/2022"
 output: github_document
 ---
 
@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Overview
+
+![](C:\\Users\\mroberts\\OneDrive - Memorial University of Newfoundland\\Marine Institute\\Dissertation Plans\\Chapter 2\\Package\\hexsticker_tastyfish.png){width=35%}
 
 # Installation
 
@@ -86,7 +88,7 @@ id=c(0,1,2)
 Now that we have that pre-processing done, we can input that information with some starting values to create the tmb data and parameter lists using `model_data` and `model_param`. If you are estimating multiple functional response forms (e.g. from multiple predators), lbeta and lchi can be treated as vectors where the order of starting values will match the order that the data was input as.
 
 ```{r}
-tmb_data<-model_data(fishy_dat=fishy_dat, id=id, n=n, type="nonlinear")
+tmb_data<-model_data(fishy_dat=fishy_dat, n=n, type="nonlinear")
 
 param_list<- model_param(tmb_data, lbeta=log(2), lchi=log(0.5), type="nonlinear")
 ```
@@ -99,7 +101,7 @@ obj<- TMB::MakeADFun(data = c(model = "NLFPM", # which model to use
                                 tmb_data),
                        parameters = param_list,
                        DLL = "tastyfish_TMBExports", 
-                       random=c("ny")) # package's DLL
+                       random=c("iye")) # package's DLL
 
 opt<-nlminb(obj$par,obj$fn,obj$gr,control = list(trace=10,eval.max=2000,iter.max=1000),silent=TRUE)
 
@@ -123,7 +125,7 @@ plot_ts(tmb_data, rep, sdrep, year=unique(spring_camp_surv$year), dat_names=c("T
 We can compare these results to what we would obtain if assuming a linear functional response by running the LFPM. We simply remove the nonlinear functional response shape parameters from the `param_list` function and change the type to "linear":
 
 ```{r}
-tmb_data<-model_data(fishy_dat=fishy_dat, id=id, n=n, type="linear")
+tmb_data<-model_data(fishy_dat=fishy_dat, n=n, type="linear")
 
 param_list<- model_param(tmb_data, type="linear")
 ```
@@ -136,7 +138,7 @@ obj<- TMB::MakeADFun(data = c(model = "LFPM", # which model to use
                                 tmb_data),
                        parameters = param_list,
                        DLL = "tastyfish_TMBExports", 
-                       random=c("ny")) # package's DLL
+                       random=c("iye")) # package's DLL
 
 opt<-nlminb(obj$par,obj$fn,obj$gr,control = list(trace=10,eval.max=2000,iter.max=1000),silent=TRUE)
 

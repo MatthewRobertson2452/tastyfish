@@ -29,42 +29,43 @@ Type LFPM(objective_function<Type>* obj) {
     DATA_VECTOR(pa);
     
     //READ THE PARAMETERS
-    PARAMETER_VECTOR(ny);
-    PARAMETER(lk); //PLACEHOLDER PARAMETER BECAUSE CAN'T ONLY HAVE RANDOM EFFECTS
+    PARAMETER_VECTOR(iye);
+    PARAMETER(lk); //CHECK CHECK PLACEHOLDER PARAMETER BECAUSE CAN'T ONLY HAVE RANDOM EFFECTS
     
-    //TRANSFORM PARAMETERS AND CREATE DERIVED PARAMETERS
-    vector<Type> prob(nyrs);
-    matrix<Type> new_prob(nyrs,ndex);
+    //CREATE DERIVED PARAMETERS
+    vector<Type> mu(nyrs);
+    matrix<Type> new_mu(nyrs,ndex);
     
     int id, iy;
     for(int i = 0;i < n;++i){
       iy = iyear(i);
       id = idex(i);
       
-      prob(iy) = exp(ny(iy))/(1+exp(ny(iy))); //LOGIT TRANSFORM THE ABUNDANCE INDEX
+      mu(iy) = one-exp(-iye(iy)); //EXPONENTIAL FOR TRAWL DATA
       
-      new_prob(iy,id)=prob(iy); // ALL UNBIASED DATA
+      new_mu(iy,id)=mu(iy); 
       
       
       if(isNA(pa(i))==false){
-        nll -= dbinom(pa(i), one, new_prob(iy,id), true); //BERNOULLI LIKELIHOOD FOR PRESENCE/ABSENCE DATA
+        if(id==0){nll -= dbinom(pa(i), one, new_mu(iy,0), true);} //BERNOULLI LIKELIHOOD FOR PRESENCE/ABSENCE DATA
+        if(id>0){nll -= dbinom(pa(i), one, new_mu(iy,id), true);} 
       }
       
     }
     
     //GAUSSIAN RW FOR THE ABUNDANCE INDEX
-    vector<Type> del_ny=ny;
-    nll -= dnorm(del_ny(0),Type(10.0),one, true);
+    vector<Type> del_iye=log(iye);
+    nll -= dnorm(del_iye(0),Type(10.0),one, true);
     for(int i = 1;i < nyrs;++i){
-      nll -= dnorm(del_ny(i),del_ny(i-1),one, true);
+      nll -= dnorm(del_iye(i),del_iye(i-1),one, true);
     }
     
     
-    REPORT(prob);
-    REPORT(ny);
-    REPORT(new_prob);
+    REPORT(mu);
+    REPORT(iye);
+    REPORT(new_mu);
     
-    ADREPORT(ny);
+    ADREPORT(iye);
   
   return nll;
   }

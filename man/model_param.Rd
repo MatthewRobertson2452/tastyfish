@@ -18,12 +18,12 @@ model_param(tmb_data, lbeta, lchi, type)
 \item{lk}{A placeholder parameter for the linear model that allows it to run, since otherwise there wouldn't be any fixed effects parameters. Don't change from default}
 }
 \value{
-A list of parameters for the functional response model, including a vector the length of the number of years (ny),
-and a starting value for the beta and chi parameter's
+A list of parameters for the functional response model, including a vector the length of the number of years (iye),
+and a starting value for the beta, chi, and random walk variability parameters
 }
 \description{
 Create parameter list for for general functional response model
 }
 \examples{
-model_param(tmb_data=tmb_data, lbeta=log(2), lchi=log(0.5), type="nonlinear")
+model_param(tmb_data=tmb_data, lbeta=log(2), lchi=log(1), type="nonlinear")
 }

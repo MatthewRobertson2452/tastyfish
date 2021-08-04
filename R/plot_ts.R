@@ -38,18 +38,18 @@ plot_ts<-function(tmb_data, rep, sdrep, year, dat_names, ylim=c(0,1), type){
   low_rho = sdrep$value - sdrep$sd
   high_rho = sdrep$value + sdrep$sd
   
-  multi_inner[,2]<-log(multi_inner[,2]/(1-multi_inner[,2]))
-  multi_inner$firstdat<-log(multi_inner$firstdat/(1-multi_inner$firstdat))
-  if(length(new_list)==3){multi_inner$seconddat<-log(multi_inner$seconddat/(1-multi_inner$seconddat))}
+  multi_inner[,2]<-log(1/(1-multi_inner[,2]))
+  multi_inner$firstdat<-log(1/(1-multi_inner$firstdat))
+  if(length(new_list)==3){multi_inner$seconddat<-log(1/(1-multi_inner$seconddat))}
   
   n_dfs<-length(multi_inner)
   
-  min_dat<-min(c(rep$ny, multi_inner[,2], multi_inner$firstdat, multi_inner$seconddat, low_rho, high_rho),na.rm=TRUE)-0.1
-  max_dat<-max(c(rep$ny, multi_inner[,2], multi_inner$firstdat, multi_inner$seconddat, low_rho, high_rho),na.rm=TRUE)+0.1
+  min_dat<-min(c(rep$iye, multi_inner[,2], multi_inner$firstdat, multi_inner$seconddat, low_rho, high_rho),na.rm=TRUE)-0.1
+  max_dat<-max(c(rep$iye, multi_inner[,2], multi_inner$firstdat, multi_inner$seconddat, low_rho, high_rho),na.rm=TRUE)+0.1
   
-  plot(rep$ny~year, type="l", xlab="Year", ylab="Prey Index", ylim=c(min_dat,max_dat), lwd=2, cex.axis=1.25, cex.lab=1.5)
+  plot(rep$iye~year, type="l", xlab="Year", ylab="Prey Index", ylim=c(min_dat,max_dat), lwd=2, cex.axis=1.25, cex.lab=1.5)
   polygon(c(year,rev(year)),c(low_rho,rev(high_rho)),border=NA,col="lightgrey")
-  lines(rep$ny~year, lwd=2)
+  lines(rep$iye~year, lwd=2)
   lines(multi_inner[,2]~year, col="blue", lty=2)
   lines(multi_inner$firstdat~year, col="red",lty=2)
   if(length(new_list)==3){lines(multi_inner$seconddat~year, col="purple",lty=2)}
@@ -84,18 +84,18 @@ plot_ts<-function(tmb_data, rep, sdrep, year, dat_names, ylim=c(0,1), type){
   low_rho = sdrep$value - sdrep$sd
   high_rho = sdrep$value + sdrep$sd
 
-  multi_inner[,2]<-log(multi_inner[,2]/(1-multi_inner[,2]))
-  multi_inner$firstdat<-log(multi_inner$firstdat/(1-multi_inner$firstdat))
-  if(length(new_list)==3){multi_inner$seconddat<-log(multi_inner$seconddat/(1-multi_inner$seconddat))}
+  multi_inner[,2]<-log(1/(1-multi_inner[,2]))
+  multi_inner$firstdat<-log(1/(1-multi_inner$firstdat))
+  if(length(new_list)==3){multi_inner$seconddat<-log(1/(1-multi_inner$seconddat))}
   
   n_dfs<-length(multi_inner)
   
-  min_dat<-min(c(rep$ny, multi_inner[,2], multi_inner$firstdat, multi_inner$seconddat, low_rho, high_rho),na.rm=TRUE)-0.1
-  max_dat<-max(c(rep$ny, multi_inner[,2], multi_inner$firstdat, multi_inner$seconddat, low_rho, high_rho),na.rm=TRUE)+0.1
+  min_dat<-min(c(rep$iye, multi_inner[,2], multi_inner$firstdat, multi_inner$seconddat, low_rho, high_rho),na.rm=TRUE)-0.1
+  max_dat<-max(c(rep$iye, multi_inner[,2], multi_inner$firstdat, multi_inner$seconddat, low_rho, high_rho),na.rm=TRUE)+0.1
     
-  plot(rep$ny~year, type="l", xlab="Year", ylab="Prey Index", ylim=c(min_dat,max_dat), lwd=2, cex.axis=1.25, cex.lab=1.5)
+  plot(rep$iye~year, type="l", xlab="Year", ylab="Prey Index", ylim=c(min_dat,max_dat), lwd=2, cex.axis=1.25, cex.lab=1.5)
   polygon(c(year,rev(year)),c(low_rho,rev(high_rho)),border=NA,col="lightgrey")
-  lines(rep$ny~year, lwd=2)
+  lines(rep$iye~year, lwd=2)
   lines(multi_inner[,2]~year, col="blue", lty=2)
   lines(multi_inner$firstdat~year, col="red",lty=2)
   if(length(new_list)==3){lines(multi_inner$seconddat~year, col="purple",lty=2)}
