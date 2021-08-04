@@ -2,11 +2,11 @@ tastyfish: a package to account for a non-linear functional response
 when estimating prey dynamics using predator diet data
 ================
 Matthew Robertson
-04/8/2022
+04/8/2021
 
 # Overview
 
-<img src="C:\Users\mroberts\OneDrive%20-%20Memorial%20University%20of%20Newfoundland\Marine%20Institute\Dissertation%20Plans\Chapter%202\Package\tastyfish\hexsticker\hexsticker_tastyfish.PNG" style="width:35.0%" />
+<img src="hexsticker\hexsticker_tastyfish.PNG" style="width:35.0%" />
 
 # Installation
 

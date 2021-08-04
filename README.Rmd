@@ -1,7 +1,7 @@
 ---
 title: 'tastyfish: a package to account for a non-linear functional response when estimating prey dynamics using predator diet data'
 author: "Matthew Robertson"
-date: "04/8/2022"
+date: "04/8/2021"
 output: github_document
 ---
 
@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Overview
 
-![](C:\\Users\\mroberts\\OneDrive - Memorial University of Newfoundland\\Marine Institute\\Dissertation Plans\\Chapter 2\\Package\\tastyfish\\hexsticker\\hexsticker_tastyfish.PNG){width=35%}
+![](hexsticker\\hexsticker_tastyfish.PNG){width=35%}
 
 # Installation
 
