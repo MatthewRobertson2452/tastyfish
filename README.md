@@ -6,7 +6,7 @@ Matthew Robertson
 
 # Overview
 
-<img src="hexsticker\hexsticker_tastyfish.PNG" style="width:35.0%" />
+<img src="hexsticker/hexsticker_tastyfish.png" style="width:35.0%" />
 
 # Installation
 

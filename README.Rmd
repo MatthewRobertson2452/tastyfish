@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Overview
 
-![](hexsticker\\hexsticker_tastyfish.PNG){width=35%}
+![](hexsticker/hexsticker_tastyfish.png){width=35%}
 
 # Installation
 
