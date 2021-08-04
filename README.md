@@ -6,7 +6,7 @@ Matthew Robertson
 
 # Overview
 
-<img src="C:\Users\mroberts\OneDrive%20-%20Memorial%20University%20of%20Newfoundland\Marine%20Institute\Dissertation%20Plans\Chapter%202\Package\hexsticker_tastyfish.png" style="width:35.0%" />
+<img src="C:\Users\mroberts\OneDrive%20-%20Memorial%20University%20of%20Newfoundland\Marine%20Institute\Dissertation%20Plans\Chapter%202\Package\tastyfish\hexsticker\hexsticker_tastyfish.PNG" style="width:35.0%" />
 
 # Installation
 
