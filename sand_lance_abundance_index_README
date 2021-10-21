@@ -1,0 +1,15 @@
+This csv contains model estimates for Northern sand lance on the Grand Bank of Newfoundland (NAFO divisions 3LNO) from 1996 - 2018. 
+We recommend using the Both_index estimates since this model integrated all available data. 
+However, we also provided model estimates from the single-species models for transparency.
+
+Plaice_index is the estimates time-series for sand lance abundance from the model that combined trawl survey and American plaice stomach contents data.
+Plaice_low95 is the lower bound of the 95% confidence interval for the Plaice_index
+Plaice_high95 is the upper bound of the 95% confidence interval for the Plaice_index
+
+Cod_index is the estimates time-series for sand lance abundance from the model that combined trawl survey and Atlantic cod stomach contents data.
+Cod_low95 is the lower bound of the 95% confidence interval for the Cod_index
+Cod_high95 is the upper bound of the 95% confidence interval for the Cod_index
+
+Both_index is the estimates time-series for sand lance abundance from the model that integrated all available data from trawl surveys and American plaice and Atlantic cod stomach contents data.
+Both_low95 is the lower bound of the 95% confidence interval for the Both_index
+Both_high95 is the upper bound of the 95% confidence interval for the Both_index
