@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Overview
 
+tastyfish is a package designed to to estimate prey dynamics by combining bottom-trawl research survey data with predator stomach contents data while accounting for predator functional response. This model's first application was to estimate sand lance abundance on the Grand Bank (NAFO divisions 3LNO), and the estimated abundance indices can be found as a csv file here as well. This package is associated with Robertson et al. (in Revision) in which we describe the model's functionality, limitations, and application potential.
+
 <img src="hexsticker/hexsticker_tastyfish.png" width="300" />
 
 # Installation
