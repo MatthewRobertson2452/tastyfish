@@ -2,7 +2,7 @@ tastyfish: a package to account for a non-linear functional response
 when estimating prey dynamics using predator diet data
 ================
 Matthew Robertson
-04/8/2021
+10/20/2023
 
 # Overview
 
@@ -25,7 +25,7 @@ Install the
 package and run:
 
 ``` r
-devtools::install_github(MatthewRobertson2452\tastyfish)
+devtools::install_github("MatthewRobertson2452/tastyfish")
 library(tastyfish)
 ```
 

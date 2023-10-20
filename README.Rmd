@@ -1,7 +1,7 @@
 ---
 title: 'tastyfish: a package to account for a non-linear functional response when estimating prey dynamics using predator diet data'
 author: "Matthew Robertson"
-date: "04/8/2021"
+date: "10/20/2023"
 output: github_document
 ---
 
