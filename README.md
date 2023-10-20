@@ -12,8 +12,9 @@ contents data while accounting for predator functional response. This
 model’s first application was to estimate sand lance abundance on the
 Grand Bank (NAFO divisions 3LNO), and the estimated abundance indices
 can be found as a csv file here as well. This package is associated with
-Robertson et al. (in Revision) in which we describe the model’s
-functionality, limitations, and application potential.
+[Robertson et al. (2022)](https://doi.org/10.1111/2041-210X.13795) in
+which we describe the model’s functionality, limitations, and
+application potential.
 
 <img src="hexsticker/hexsticker_tastyfish.png" width="300" />
 
@@ -33,7 +34,7 @@ package locally as a ZIP file by clicking the Code menu and “download
 ZIP” from the [github
 page](https://github.com/MatthewRobertson2452/tastyfish). You can then
 extract the folder in a local directory while recording the directory
-name (which I will reference as download\_dir). To install, then use
+name (which I will reference as download_dir). To install, then use
 
 ``` r
 devtools::install_local(path=download_dir, dependencies=FALSE)
@@ -49,6 +50,11 @@ For this example, I will be analyzing trawl, full stomach contents, and
 called stomach contents data. They are all formatted similarly
 
 ``` r
+library(tastyfish)
+data("example_dat")
+trawl<-example_dat$trawl
+call_sto<-example_dat$call_sto
+full_sto<-example_dat$full_sto
 head(trawl)
 ```
 
@@ -128,21 +134,28 @@ for the functional response:
 plot_curve(rep, tmb_data)
 ```
 
-![Estimated functional response for American plaice. Full stomach
-contents shown as open circles and called stomach contents shown as
-closed circles.](README_files/figure-gfm/unnamed-chunk-10-1.png)
+<figure>
+<img src="README_files/figure-gfm/unnamed-chunk-9-1.png"
+alt="Estimated functional response for American plaice. Full stomach contents shown as open circles and called stomach contents shown as closed circles." />
+<figcaption aria-hidden="true">Estimated functional response for
+American plaice. Full stomach contents shown as open circles and called
+stomach contents shown as closed circles.</figcaption>
+</figure>
 
 And time-series:
 
 ``` r
-plot_ts(tmb_data, rep, sdrep, year=unique(spring_camp_surv$year), dat_names=c("Trawl","Called","Full"), type="nonlinear")
+plot_ts(tmb_data, rep, sdrep, year=unique(trawl$year), dat_names=c("Trawl","Called","Full"), type="nonlinear")
 ```
 
-![Estimated sand lance index of abundance from models with American
-plaice stomach contents data. The shaded grey area represents the
-standard error around the estimated trend. Dashed lines represent the
-estimated trends from each data
-source.](README_files/figure-gfm/unnamed-chunk-11-1.png)
+<figure>
+<img src="README_files/figure-gfm/unnamed-chunk-10-1.png"
+alt="Estimated sand lance index of abundance from models with American plaice stomach contents data. The shaded grey area represents the standard error around the estimated trend. Dashed lines represent the estimated trends from each data source." />
+<figcaption aria-hidden="true">Estimated sand lance index of abundance
+from models with American plaice stomach contents data. The shaded grey
+area represents the standard error around the estimated trend. Dashed
+lines represent the estimated trends from each data source.</figcaption>
+</figure>
 
 We can compare these results to what we would obtain if assuming a
 linear functional response by running the LFPM. We simply remove the
@@ -175,11 +188,14 @@ Finally, we can plot our output be specifying that we used a linear
 functional response model in `plot_ts` function.
 
 ``` r
-plot_ts(tmb_data, rep, sdrep, year=unique(spring_camp_surv$year), dat_names=c("Trawl","Called","Full"), type="linear")
+plot_ts(tmb_data, rep, sdrep, year=unique(trawl$year), dat_names=c("Trawl","Called","Full"), type="linear")
 ```
 
-![Estimated sand lance index of abundance from models with American
-plaice stomach contents data. The shaded grey area represents the
-standard error around the estimated trend. Dashed lines represent the
-estimated trends from each data
-source.](README_files/figure-gfm/unnamed-chunk-14-1.png)
+<figure>
+<img src="README_files/figure-gfm/unnamed-chunk-13-1.png"
+alt="Estimated sand lance index of abundance from models with American plaice stomach contents data. The shaded grey area represents the standard error around the estimated trend. Dashed lines represent the estimated trends from each data source." />
+<figcaption aria-hidden="true">Estimated sand lance index of abundance
+from models with American plaice stomach contents data. The shaded grey
+area represents the standard error around the estimated trend. Dashed
+lines represent the estimated trends from each data source.</figcaption>
+</figure>

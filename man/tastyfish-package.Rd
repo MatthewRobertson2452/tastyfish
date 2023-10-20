@@ -6,7 +6,6 @@
 \alias{tastyfish-package}
 \title{tastyfish: Account For Functional Response When Modeling Stomach Contents Data}
 \description{
-Using predator stomach contents data to model prey abundance is becoming increasingly common but can be biased if we 
-  don't account for the functional response. This model will do both!
+Using predator stomach contents data to model prey abundance is becoming increasingly common but can be biased if we don't account for the functional response. This model will do both!
 }
 \keyword{internal}

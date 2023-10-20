@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Overview
 
-tastyfish is a package designed to to estimate prey dynamics by combining bottom-trawl research survey data with predator stomach contents data while accounting for predator functional response. This model's first application was to estimate sand lance abundance on the Grand Bank (NAFO divisions 3LNO), and the estimated abundance indices can be found as a csv file here as well. This package is associated with Robertson et al. (in Revision) in which we describe the model's functionality, limitations, and application potential.
+tastyfish is a package designed to to estimate prey dynamics by combining bottom-trawl research survey data with predator stomach contents data while accounting for predator functional response. This model's first application was to estimate sand lance abundance on the Grand Bank (NAFO divisions 3LNO), and the estimated abundance indices can be found as a csv file here as well. This package is associated with [Robertson et al. (2022)](https://doi.org/10.1111/2041-210X.13795) in which we describe the model's functionality, limitations, and application potential.
 
 <img src="hexsticker/hexsticker_tastyfish.png" width="300" />
 
@@ -37,31 +37,13 @@ This example will run through how an index was developed for Northern sand lance
 
 For this example, I will be analyzing trawl, full stomach contents, and called stomach contents data. They are all formatted similarly
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-setwd("C:\\Users\\mroberts\\OneDrive - Memorial University of Newfoundland\\Marine Institute\\Dissertation Plans\\Chapter 2\\Stomach-Content-Simulation\\New Parameterization")
-
-load("ch2_data.RData")
-
-
-ampl_call<-subset(ch2_data$spring_call_dat, name=="american plaice")
-ampl_full<-subset(ch2_data$spring_sto_dat, Predator_spp_name=="plaice")
-
-spring_camp_surv<-ch2_data$spring_camp_surv
-
-spring_camp_surv<-subset(spring_camp_surv, survey.year!=1995 & survey.year!=2019)
-
-ampl_call<-subset(ampl_call,length>25 & survey.year!=2006 & survey.year!=2016 & survey.year!=2017 & survey.year!=2018 & survey.year!=1995 & survey.year!=2019)
-ampl_sto<-subset(ampl_full, Year>2012 & Year!=1995 & Year!=2019)
-
-trawl<-data.frame(year=spring_camp_surv$survey.year, pa=spring_camp_surv$trawl_pa)
-call_sto<-data.frame(year=ampl_call$survey.year, pa=ampl_call$pa)
-full_sto<-data.frame(year=ampl_sto$Year, pa=ampl_sto$pa)
-
-
-library(tastyfish)
-```
 
 ```{r}
+library(tastyfish)
+data("example_dat")
+trawl<-example_dat$trawl
+call_sto<-example_dat$call_sto
+full_sto<-example_dat$full_sto
 head(trawl)
 ```
 
@@ -121,7 +103,7 @@ plot_curve(rep, tmb_data)
 And time-series:
 
 ```{r, fig.cap="Estimated sand lance index of abundance from models with American plaice stomach contents data. The shaded grey area represents the standard error around the estimated trend. Dashed lines represent the estimated trends from each data source."}
-plot_ts(tmb_data, rep, sdrep, year=unique(spring_camp_surv$year), dat_names=c("Trawl","Called","Full"), type="nonlinear")
+plot_ts(tmb_data, rep, sdrep, year=unique(trawl$year), dat_names=c("Trawl","Called","Full"), type="nonlinear")
 ```
 
 We can compare these results to what we would obtain if assuming a linear functional response by running the LFPM. We simply remove the nonlinear functional response shape parameters from the `param_list` function and change the type to "linear":
@@ -152,6 +134,6 @@ sdrep<-TMB::sdreport(obj)
 Finally, we can plot our output be specifying that we used a linear functional response model in `plot_ts` function.
 
 ```{r, fig.cap="Estimated sand lance index of abundance from models with American plaice stomach contents data. The shaded grey area represents the standard error around the estimated trend. Dashed lines represent the estimated trends from each data source."}
-plot_ts(tmb_data, rep, sdrep, year=unique(spring_camp_surv$year), dat_names=c("Trawl","Called","Full"), type="linear")
+plot_ts(tmb_data, rep, sdrep, year=unique(trawl$year), dat_names=c("Trawl","Called","Full"), type="linear")
 ```
 
