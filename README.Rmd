@@ -20,7 +20,7 @@ tastyfish is a package designed to to estimate prey dynamics by combining bottom
 Install the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) package and run:
 
 ```{r, eval=FALSE}
-devtools::install_github(MatthewRobertson2452\tastyfish)
+devtools::install_github("MatthewRobertson2452/tastyfish")
 library(tastyfish)
 ```
 
