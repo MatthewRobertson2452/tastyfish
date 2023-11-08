@@ -4,12 +4,12 @@
 \alias{plot_curve}
 \title{Plot the functional response curve and associated data}
 \usage{
-plot_curve(rep, tmb_data)
+plot_curve(rep, data)
 }
 \arguments{
 \item{rep}{The report object from the TMB model}
 
-\item{tmb_data}{The datalist used for the TMB model}
+\item{data}{The datalist used for the TMB model}
 }
 \value{
 plot
@@ -18,5 +18,5 @@ plot
 Plot the functional response curve and associated data
 }
 \examples{
-plot_curve(rep=rep, tmb_data=tmb_data)
+plot_curve(rep=rep, data=data)
 }

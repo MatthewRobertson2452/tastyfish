@@ -4,7 +4,7 @@
 \alias{make_data}
 \title{Create basic dataframe for the model}
 \usage{
-make_data(pa, year, n)
+make_data(pa, year, n, id, names)
 }
 \arguments{
 \item{pa}{Vector of presence/absence data from all surveys (binary)}
@@ -12,6 +12,10 @@ make_data(pa, year, n)
 \item{year}{Vector of years associated with each observation (numeric)}
 
 \item{n}{Vector of the number of observations for each survey (integer)}
+
+\item{id}{Vector of species identifiers for each data source (integer)}
+
+\item{names}{Vector of names for each type of data, used for plotting (character)}
 }
 \value{
 dataframe
@@ -20,5 +24,5 @@ dataframe
 Combine presence/absence data from bottom trawl surveys, stomach contents, and an index for the different indices
 }
 \examples{
-make_data(pa=rbinom(n=20, size=1, prob=0.5), year=rep(seq(from=1, to=10, by=1),2), n=c(10,10))
+make_data(pa=rbinom(n=20, size=1, prob=0.5), year=rep(seq(from=1, to=10, by=1),2), n=c(10,10), id =c(0,1,1), names=c("Trawl", "Call", "Full"))
 }

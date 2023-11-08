@@ -2,28 +2,27 @@
 
 #' Plot time series of index and all dataseries
 #'
+#' @param data Object output from the make_data() function
 #' @param rep The report object from the TMB model
 #' @param sdrep The variance report object from the TMB model
 #' @param year A vector of the years used in the model
-#' @param dat_names A vector of the names of the different data series used for the legend
 #' @param ylim A vector for y-limit in the plot (defaults to c(0,1))
 #' @param type A character identifying whether you are plotting a linear or nonlinear functional response model. Input "linear" for a linear model and "nonlinear" for a nonlinear model
 #'
 #' @return plot
 #' @export
 #'
-#' @examples plot_ts(rep=rep, sdrep=sdrep, year=seq(from=1995, to=2018, by=1), dat_names=c("Trawl","Full Stomach Contents","Called Stomach Contents"), ylim=c(0.2,0.6))
-plot_ts<-function(tmb_data, rep, sdrep, year, dat_names, ylim=c(0,1), type){
+#' @examples plot_ts(rep=rep, sdrep=sdrep, year=seq(from=1996, to=2018, by=1), ylim=c(0.2,0.6), type="nonlinear")
+plot_ts<-function(data, rep, sdrep, year, ylim=c(0,1), type){
   
   if(type=="linear"){
-  dat_names<-c("Index", dat_names)
+  uni_names<-unique(data$names)
+  dat_names<-c("Index", uni_names)
   
-  id<-unique(tmb_data$idex)
-  tmb_df<-data.frame(id=tmb_data$idex, pa=tmb_data$pa, yr=tmb_data$iyear)
   new_list<-list()
-  for(i in 1:length(id)){
-    one_dex<-subset(tmb_df, id==i-1)
-    new_list[[i]]<-aggregate(one_dex$pa, by=list(one_dex$yr), FUN=mean, na.rm=TRUE)
+  for(i in 1:length(uni_names)){
+    one_dex<-subset(data, names==uni_names[i])
+    new_list[[i]]<-aggregate(one_dex$pa, by=list(one_dex$year), FUN=mean, na.rm=TRUE)
   }
   
   multi_inner <- Reduce(
@@ -62,14 +61,13 @@ plot_ts<-function(tmb_data, rep, sdrep, year, dat_names, ylim=c(0,1), type){
 }
   
   if(type=="nonlinear"){
-  dat_names<-c("Index", dat_names)
+    uni_names<-unique(data$names)
+    dat_names<-c("Index", uni_names)
   
-  id<-unique(tmb_data$idex)
-  tmb_df<-data.frame(id=tmb_data$idex, pa=tmb_data$pa, yr=tmb_data$iyear)
   new_list<-list()
-  for(i in 1:length(id)){
-    one_dex<-subset(tmb_df, id==i-1)
-    new_list[[i]]<-aggregate(one_dex$pa, by=list(one_dex$yr), FUN=mean, na.rm=TRUE)
+  for(i in 1:length(uni_names)){
+    one_dex<-subset(data, names==uni_names[i])
+    new_list[[i]]<-aggregate(one_dex$pa, by=list(one_dex$year), FUN=mean, na.rm=TRUE)
   }
   
   multi_inner <- Reduce(

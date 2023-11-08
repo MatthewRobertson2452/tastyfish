@@ -9,7 +9,7 @@
 #' a vector for all presence/absence data (pa)
 #' @export
 #'
-#' @examples model_data(fishy_dat=fishy_dat, n=c(length(df$pa),length(df1$pa),length(df2$pa)), type="nonlinear)
+#' @examples model_data(fishy_dat=fishy_dat, n=c(length(df$pa),length(df1$pa),length(df2$pa)), type="nonlinear")
 model_data<-function(fishy_dat, n, type){
   
   if(type=="linear"){

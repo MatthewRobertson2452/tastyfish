@@ -4,16 +4,16 @@
 \alias{plot_ts}
 \title{Plot time series of index and all dataseries}
 \usage{
-plot_ts(tmb_data, rep, sdrep, year, dat_names, ylim = c(0, 1), type)
+plot_ts(data, rep, sdrep, year, ylim = c(0, 1), type)
 }
 \arguments{
+\item{data}{Object output from the make_data() function}
+
 \item{rep}{The report object from the TMB model}
 
 \item{sdrep}{The variance report object from the TMB model}
 
 \item{year}{A vector of the years used in the model}
-
-\item{dat_names}{A vector of the names of the different data series used for the legend}
 
 \item{ylim}{A vector for y-limit in the plot (defaults to c(0,1))}
 
@@ -26,5 +26,5 @@ plot
 Plot time series of index and all dataseries
 }
 \examples{
-plot_ts(rep=rep, sdrep=sdrep, year=seq(from=1995, to=2018, by=1), dat_names=c("Trawl","Full Stomach Contents","Called Stomach Contents"), ylim=c(0.2,0.6))
+plot_ts(rep=rep, sdrep=sdrep, year=seq(from=1996, to=2018, by=1), ylim=c(0.2,0.6), type="nonlinear")
 }

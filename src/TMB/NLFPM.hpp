@@ -29,14 +29,14 @@ Type NLFPM(objective_function<Type>* obj) {
   
   //READ THE PARAMETERS
   PARAMETER_VECTOR(iye);
-  PARAMETER(lbeta);
-  PARAMETER(lchi);
+  PARAMETER_VECTOR(lbeta);
+  PARAMETER_VECTOR(lchi);
   PARAMETER(logrw_var);
   
   //TRANSFORM PARAMETERS AND CREATE DERIVED PARAMETERS
   Type rw_var = exp(logrw_var);
-  Type beta=exp(lbeta);
-  Type chi=exp(lchi);
+  vector<Type> beta=exp(lbeta);
+  vector<Type> chi=exp(lchi);
   
   vector<Type> mu(nyrs);
   matrix<Type> new_mu(nyrs,ndex);
@@ -49,7 +49,7 @@ Type NLFPM(objective_function<Type>* obj) {
     mu(iy) = one-exp(-iye(iy));  //EXPONENTIAL FOR TRAWL DATA
     
     if(id==0){new_mu(iy,0)=mu(iy);} //TRAWL PROBABILITY UNBIASED
-    if(id>0){new_mu(iy,id)=(k*pow(mu(iy),beta))/(pow(chi,beta)+pow(mu(iy),beta));} //FUNCTIONAL RESPONSE FOR EACH STOMACH CONTENT DATA SET
+    if(id>0){new_mu(iy,id)=(k*pow(mu(iy),beta(id-1)))/(pow(chi(id-1),beta(id-1))+pow(mu(iy),beta(id-1)));} //FUNCTIONAL RESPONSE FOR EACH STOMACH CONTENT DATA SET
     
     if(isNA(pa(i))==false){
       if(id==0){nll -= dbinom(pa(i), one, new_mu(iy,0), true);} //BERNOULLI LIKELIHOOD FOR PRESENCE/ABSENCE DATA
@@ -66,6 +66,7 @@ Type NLFPM(objective_function<Type>* obj) {
   }
   
   
+  REPORT(rw_var);
   REPORT(mu);
   REPORT(iye);
   REPORT(beta);

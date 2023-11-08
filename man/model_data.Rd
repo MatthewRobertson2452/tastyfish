@@ -21,3 +21,6 @@ a vector for all presence/absence data (pa)
 \description{
 Create data list for general functional response model
 }
+\examples{
+model_data(fishy_dat=fishy_dat, n=c(length(df$pa),length(df1$pa),length(df2$pa)), type="nonlinear")
+}

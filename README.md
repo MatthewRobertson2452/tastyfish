@@ -66,47 +66,78 @@ head(trawl)
     ## 5 1996  1
     ## 6 1996  0
 
-We then need to organize all three types of data into one dataframe to
-develop the data format needed for analyses. This is done by creating a
-vector that describes the length of each dataset and then inputting the
-data and that vector (n) into `make_data()`.
+We are going to include all of this data into the model. To simplify
+processes later on, we will concatenate the data into vectors
+representing the number of samples, presence/absence, and year data. The
+order in which these are concatenated will matter for some functions
+later on and should remain consistent throughout.
 
 ``` r
-n<-c(length(trawl$year), length(call_sto$year), length(full_sto$year))
-
-fishy_dat<-make_data(pa=c(trawl$pa, call_sto$pa, full_sto$pa),
-          year=c(trawl$year, call_sto$year, full_sto$year),
-          n=n)
+n=c(length(trawl$year), length(call_sto$year), length(full_sto$year))
+pa=c(trawl$pa, call_sto$pa, full_sto$pa)
+year=c(trawl$year, call_sto$year, full_sto$year)
 ```
 
 Since both called and full stomach contents data will be treated as
 having the same functional response we will identify them with the same
 ID for the model. This ID will be different from the trawl data. The
-order of the numbers in the `id` vector need to match the order of the
-dataframes input in `make_data()`.
+order of the numbers in the `id` vector need to match the order that the
+other data were concatenated.
 
 ``` r
 id=c(0,1,1)
 ```
 
 If we wanted the different types of stomach contents data to estimate
-separate functional response shapes we would use:
+separate functional response shapes, or if we had one type of stomach
+contents data for two predators, we would use:
 
 ``` r
 id=c(0,1,2)
 ```
 
+We also may want to remember what each data source represents, and will
+therefore create a vector of names that match the length of our id
+vector from the prior step. This will not impact the model but it does
+impact plotting functions.
+
+``` r
+names=c("Trawl", "Call", "Full")
+```
+
+We then need to organize these data into one dataframe to develop the
+data format needed for analyses. This is done by inputting the different
+objects into `make_data()`.
+
+``` r
+fishy_dat<-make_data(pa=pa,
+          year=year,
+          n=n,
+          id=id, 
+          names=names)
+```
+
 Now that we have that pre-processing done, we can input that information
 with some starting values to create the tmb data and parameter lists
-using `model_data` and `model_param`. If you are estimating multiple
-functional response forms (e.g. from multiple predators), lbeta and lchi
-can be treated as vectors where the order of starting values will match
-the order that the data was input as.
+using `model_data` and `model_param`.
 
 ``` r
 tmb_data<-model_data(fishy_dat=fishy_dat, n=n, type="nonlinear")
 
 param_list<- model_param(tmb_data, lbeta=log(2), lchi=log(0.5), type="nonlinear")
+```
+
+If you are estimating multiple functional response forms (e.g. from
+multiple predators), lbeta and lchi can be treated as vectors where the
+order of starting values will match the order that the data was input
+as.
+
+For example, a model with two predator’s would need to be written as:
+
+``` r
+tmb_data<-model_data(fishy_dat=fishy_dat, n=n, type="nonlinear")
+
+param_list<- model_param(tmb_data, lbeta=rep(log(2),2), lchi=rep(log(0.5),2), type="nonlinear")
 ```
 
 We can then run the TMB model to calculate the prey index of abundance
@@ -131,11 +162,11 @@ I have also included code to quickly visualize the outputs of the model,
 for the functional response:
 
 ``` r
-plot_curve(rep, tmb_data)
+plot_curve(rep, fishy_dat)
 ```
 
 <figure>
-<img src="README_files/figure-gfm/unnamed-chunk-9-1.png"
+<img src="README_files/figure-gfm/unnamed-chunk-12-1.png"
 alt="Estimated functional response for American plaice. Full stomach contents shown as open circles and called stomach contents shown as closed circles." />
 <figcaption aria-hidden="true">Estimated functional response for
 American plaice. Full stomach contents shown as open circles and called
@@ -145,11 +176,11 @@ stomach contents shown as closed circles.</figcaption>
 And time-series:
 
 ``` r
-plot_ts(tmb_data, rep, sdrep, year=unique(trawl$year), dat_names=c("Trawl","Called","Full"), type="nonlinear")
+plot_ts(fishy_dat, rep, sdrep, year=unique(trawl$year),type="nonlinear")
 ```
 
 <figure>
-<img src="README_files/figure-gfm/unnamed-chunk-10-1.png"
+<img src="README_files/figure-gfm/unnamed-chunk-13-1.png"
 alt="Estimated sand lance index of abundance from models with American plaice stomach contents data. The shaded grey area represents the standard error around the estimated trend. Dashed lines represent the estimated trends from each data source." />
 <figcaption aria-hidden="true">Estimated sand lance index of abundance
 from models with American plaice stomach contents data. The shaded grey
@@ -188,11 +219,11 @@ Finally, we can plot our output be specifying that we used a linear
 functional response model in `plot_ts` function.
 
 ``` r
-plot_ts(tmb_data, rep, sdrep, year=unique(trawl$year), dat_names=c("Trawl","Called","Full"), type="linear")
+plot_ts(fishy_dat, rep, sdrep, year=unique(trawl$year), type="linear")
 ```
 
 <figure>
-<img src="README_files/figure-gfm/unnamed-chunk-13-1.png"
+<img src="README_files/figure-gfm/unnamed-chunk-16-1.png"
 alt="Estimated sand lance index of abundance from models with American plaice stomach contents data. The shaded grey area represents the standard error around the estimated trend. Dashed lines represent the estimated trends from each data source." />
 <figcaption aria-hidden="true">Estimated sand lance index of abundance
 from models with American plaice stomach contents data. The shaded grey
